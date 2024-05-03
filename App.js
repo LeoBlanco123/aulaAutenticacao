@@ -1,10 +1,47 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from './src/services/firebaseConfig';
 
 export default function App() {
+
+
+  const[email, setEmail] = useState('')
+  const[password, setPassword] = useState('')
+
+  function cadastrar(){
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+
+        const user = userCredential.user;
+        console.log(user)
+
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+  });
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <TextInput
+      placeholder='Digite seu email'
+      value={email}
+      onChangeText={(value)=>setEmail(value)}
+      />
+      <TextInput
+      placeholder='Digite sua senha'
+      value={password}
+      onChangeText={(value)=>setPassword(value)}
+      />
+
+      <TouchableOpacity  onPress={cadastrar}>
+        <Text>Enviar</Text>
+      </TouchableOpacity>
+
       <StatusBar style="auto" />
     </View>
   );
